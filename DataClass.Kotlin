@@ -5,3 +5,4 @@ data class Note(
     var noteData:String? = null
 
 )
+// Custom object

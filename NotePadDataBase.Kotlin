@@ -16,3 +16,4 @@ abstract class NotesDatabase : RoomDatabase() {
         }
     }
 }
+//Room database

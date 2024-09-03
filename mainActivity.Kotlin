@@ -48,3 +48,4 @@ class MainActivity : AppCompatActivity(), OnNotesClick {
         notesViewModel.deleteNote(note)
     }
 }
+//MainActivity
