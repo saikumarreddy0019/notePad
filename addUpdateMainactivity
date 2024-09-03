@@ -1,0 +1,47 @@
+class addUpdate : AppCompatActivity() {
+    private lateinit var notesInput:EditText
+    private lateinit var saveBtn:Button
+    private lateinit var viewModel: NotesViewModel
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_add_update)
+        notesInput = findViewById(R.id.notesInput)
+        saveBtn = findViewById(R.id.saveBtn)
+        val noteData = intent.getStringExtra("noteData")
+        var noteId = -1
+
+
+        val noteType = intent.getStringExtra("noteType")
+
+      viewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application))[NotesViewModel::class.java]
+        if (noteType.equals("Edit")){
+            saveBtn.text = "Update"
+            notesInput.setText(noteData)
+
+        }
+        else{
+            saveBtn.text = "Add"
+        }
+        saveBtn.setOnClickListener {
+            val note = notesInput.text.toString()
+            noteId = intent.getIntExtra("noteId",noteId)
+
+            if(note.isNotEmpty()){
+                if (noteType.equals("Edit")){
+                    val newNote = Note(noteData = note)
+                    newNote.id = noteId
+
+                    viewModel.updateNote(newNote)
+                }
+                else{
+                    val newNote = Note(noteData=note)
+                    viewModel.addNotes(newNote)
+                }
+                startActivity(Intent(this,MainActivity::class.java))
+            }
+        }
+
+
+    }
+}

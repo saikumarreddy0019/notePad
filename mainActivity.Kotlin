@@ -1,0 +1,50 @@
+class MainActivity : AppCompatActivity(), OnNotesClick {
+    private lateinit var notesList: RecyclerView
+    private lateinit var floatingActionButton: FloatingActionButton
+    private lateinit var notesViewModel: NotesViewModel
+    private lateinit var notesAdapter: NotesAdapter
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContentView(R.layout.activity_main)
+        notesList = findViewById(R.id.notesListView)
+
+        notesList.layoutManager = LinearLayoutManager(this)
+
+        floatingActionButton = findViewById(R.id.fab)
+
+        notesAdapter = NotesAdapter(this)
+
+        notesList.adapter = notesAdapter
+
+        notesViewModel = ViewModelProvider(this,ViewModelProvider.AndroidViewModelFactory.getInstance(application))[NotesViewModel::class.java]
+
+
+          notesViewModel.getAllNotes.observe(this){
+              list ->
+              list?.let {
+                  notes ->
+                  notesAdapter.addNotes(notes)
+              }
+          }
+        floatingActionButton.setOnClickListener {
+            startActivity(Intent(this,addUpdate::class.java))
+
+        }
+
+
+    }
+
+    override fun onClick(note: Note) {
+        val i = Intent(this,addUpdate::class.java)
+        i.putExtra("noteType","Edit")
+        i.putExtra("noteData",note.noteData)
+        i.putExtra("noteId",note.id)
+        startActivity(i)
+
+    }
+
+    override fun onDeleteClick(note: Note) {
+        notesViewModel.deleteNote(note)
+    }
+}
